@@ -43,7 +43,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-// static uint8 T[100] = "AHURATUS Tech";
+static uint8 T[100] = "UWB-1000 TERMINAL";
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -80,7 +80,7 @@ static void MX_SPI1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -104,19 +104,20 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   /* =============Initialization=============== */
-  setup_DW1000RSTnIRQ(0);
-  // ILI9341_Init();
-  // ILI9341_Set_Rotation(3);
-  //  HAL_Delay(500);
-  //  ILI9341_Fill_Screen(RED);
-  //  HAL_Delay(500);
-  //  ILI9341_Fill_Screen(GREEN);
-  //  HAL_Delay(500);
-  //  ILI9341_Fill_Screen(BLUE);
-  //  HAL_Delay(500);
-  // ILI9341_Fill_Screen(BLACK);
-  // ILI9341_Draw_String(20, 20, GREENYELLOW, BLACK, T, 2);
-  // ILI9341_Draw_String(20, 40, GREENYELLOW, BLACK, ">>$", 2);
+  setup_DW1000RSTnIRQ(1);
+  ILI9341_Init();
+  ILI9341_Set_Rotation(3);
+  HAL_Delay(500);
+  ILI9341_Fill_Screen(RED);
+  HAL_Delay(500);
+  ILI9341_Fill_Screen(GREEN);
+  HAL_Delay(500);
+  ILI9341_Fill_Screen(BLUE);
+  HAL_Delay(500);
+  ILI9341_Fill_Screen(BLACK);
+  ILI9341_Draw_String(20, 20, RED, BLACK, "****** Racoon Lab Tech. ******", 2);
+  ILI9341_Draw_String(20, 40, GREENYELLOW, BLACK, (char *)T, 2);
+  ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "RX>>$", 2);
   dw_main();
   HAL_Delay(500);
   /* USER CODE END 2 */
@@ -128,7 +129,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
   }
   /* USER CODE END 3 */
 }
@@ -151,20 +151,21 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL5;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
   /** Initializes the CPU, AHB and APB buses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -205,6 +206,7 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
+
 }
 
 /**
@@ -222,20 +224,20 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED2_Pin | LED1_Pin | CS_Pin | DW_NSS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED2_Pin|LED1_Pin|CS_Pin|DW_NSS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, DC_Pin | RESET_Pin | DW_WUP_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, DC_Pin|RESET_Pin|DW_WUP_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LED2_Pin LED1_Pin CS_Pin DW_NSS_Pin */
-  GPIO_InitStruct.Pin = LED2_Pin | LED1_Pin | CS_Pin | DW_NSS_Pin;
+  GPIO_InitStruct.Pin = LED2_Pin|LED1_Pin|CS_Pin|DW_NSS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DC_Pin RESET_Pin DW_WUP_Pin */
-  GPIO_InitStruct.Pin = DC_Pin | RESET_Pin | DW_WUP_Pin;
+  GPIO_InitStruct.Pin = DC_Pin|RESET_Pin|DW_WUP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -252,6 +254,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(DW_IRQn_GPIO_Port, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
@@ -273,7 +276,7 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

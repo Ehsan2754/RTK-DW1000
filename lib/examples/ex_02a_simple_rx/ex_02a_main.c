@@ -107,9 +107,9 @@ int dw_main(void)
             }
             // ILI9341_Init();
             // ILI9341_Fill_Screen(BLACK);
-            // ILI9341_Draw_String(20, 100, GREENYELLOW, BLACK, rx_buffer, 2);
             /* Clear good RX frame event in the DW1000 status register. */
             dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
+            ILI9341_Draw_String(60, 60, PINK, BLACK, (char *)rx_buffer, 2);
         }
         else
         {
