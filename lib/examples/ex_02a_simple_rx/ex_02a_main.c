@@ -11,6 +11,8 @@
  * @author Decawave
  */
 #ifdef EX_02A_DEF
+#include <stdio.h>
+#include <string.h>
 #include "deca_device_api.h"
 #include "deca_regs.h"
 #include "deca_spi.h"
@@ -48,9 +50,10 @@ static uint16 frame_len = 0;
  */
 int dw_main(void)
 {
-    /* Display application name on LCD. */
-    // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK,APP_NAME, 2);
-
+/* Display application name on LCD. */
+#ifdef DEBUG
+    ILI9341_Draw_String(160, 40, ORANGE, BLACK, APP_NAME, 2);
+#endif
     /* Reset and initialise DW1000. See NOTE 2 below.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
      * performance. */
@@ -58,9 +61,9 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADNONE) == DWT_ERROR)
     {
-        // ILI9341_Init();
-        // ILI9341_Fill_Screen(BLACK);
-        // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "INIT FAILED", 2);
+#ifdef DEBUG
+        ILI9341_Draw_String(60, 60, RED, BLACK, "INIT FAILED", 2);
+#endif
         while (1)
         {
         };
@@ -105,11 +108,15 @@ int dw_main(void)
             {
                 dwt_readrxdata(rx_buffer, frame_len, 0);
             }
-            // ILI9341_Init();
-            // ILI9341_Fill_Screen(BLACK);
+
             /* Clear good RX frame event in the DW1000 status register. */
             dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
-            ILI9341_Draw_String(60, 60, PINK, BLACK, (char *)rx_buffer, 2);
+#ifdef DEBUG
+            char identification[100];
+            sprintf(identification,"ID=0x%X ",rx_buffer[0]);
+            ILI9341_Draw_String(60, 60, PINK, BLACK, (char *)&rx_buffer[2], 2);
+            ILI9341_Draw_String(20, 80, PINK, BLACK, (char *)identification, 2);
+#endif
         }
         else
         {

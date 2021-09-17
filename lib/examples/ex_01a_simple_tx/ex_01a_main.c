@@ -40,7 +40,7 @@ static dwt_config_t config = {
  *     - byte 1: sequence number, incremented for each new frame.
  *     - byte 2 -> 9: device ID, see NOTE 1 below.
  *     - byte 10/11: frame check-sum, automatically set by DW1000.  */
-static uint8 tx_msg[] = {0xC5, 0, 'D', 'E', 'C', 'A', 'W', 'A', 'V', 'E', 0, 0};
+static uint8 tx_msg[] = {0xC8, 0, 'D', 'E', 'C', 'A', 'W', 'A', 'V', 'E', 0, 0};
 /* Index to access to sequence number of the blink frame in the tx_msg array. */
 #define BLINK_FRAME_SN_IDX 1
 
@@ -53,7 +53,9 @@ static uint8 tx_msg[] = {0xC5, 0, 'D', 'E', 'C', 'A', 'W', 'A', 'V', 'E', 0, 0};
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK,APP_NAME, 2);
+    #ifdef DEBUG
+    ILI9341_Draw_String(160, 40, ORANGE, BLACK,APP_NAME, 2);
+    #endif
     /* Reset and initialise DW1000. See NOTE 2 below.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
      * performance. */
@@ -61,7 +63,9 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADNONE) == DWT_ERROR)
     {
-        // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "INIT FAILED", 2);
+        #ifdef DEBUG
+        ILI9341_Draw_String(60, 60, RED, BLACK, "INIT FAILED", 2);
+        #endif
         while (1)
         { };
     }
@@ -73,6 +77,7 @@ int dw_main(void)
     /* Loop forever sending frames periodically. */
     while(1)
     {
+
         /* Write frame data to DW1000 and prepare transmission. See NOTE 4 below.*/
         dwt_writetxdata(sizeof(tx_msg), tx_msg, 0); /* Zero offset in TX buffer. */
         dwt_writetxfctrl(sizeof(tx_msg), 0, 0); /* Zero offset in TX buffer, no ranging. */

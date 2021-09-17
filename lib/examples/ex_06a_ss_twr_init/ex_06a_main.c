@@ -22,7 +22,7 @@
 
 #include "deca_device_api.h"
 #include "deca_regs.h"
-#include "lcd.h"
+#include "ILI9341_Driver.h"
 #include "deca_spi.h"
 #include "port.h"
 
@@ -72,7 +72,7 @@ static uint8 rx_buffer[RX_BUF_LEN];
 static uint32 status_reg = 0;
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
- * 1 uus = 512 / 499.2 µs and 1 µs = 499.2 * 128 dtu. */
+ * 1 uus = 512 / 499.2 ï¿½s and 1 ï¿½s = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
 
 /* Delay between frames, in UWB microseconds. See NOTE 1 below. */
@@ -81,10 +81,11 @@ static uint32 status_reg = 0;
 #define RESP_RX_TIMEOUT_UUS 210
 
 /* Speed of light in air, in metres per second. */
-#define SPEED_OF_LIGHT 299702547
+#define SPEED_OF_LIGHT 299702547.0
 
 /* Hold copies of computed time of flight and distance here for reference so that it can be examined at a debug breakpoint. */
 static double tof;
+static double temp=0; 
 static double distance;
 
 /* String used to display measured distance on LCD screen (16 characters maximum). */
@@ -105,8 +106,9 @@ static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    lcd_display_str(APP_NAME);
-
+    #ifdef DEBUG
+    ILI9341_Draw_String(160, 40, ORANGE, BLACK,APP_NAME, 2);
+    #endif
     /* Reset and initialise DW1000.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
      * performance. */
@@ -114,7 +116,9 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)
     {
-        lcd_display_str("INIT FAILED");
+        #ifdef DEBUG
+        ILI9341_Draw_String(60, 60, RED, BLACK, "INIT FAILED", 2);
+        #endif
         while (1)
         { };
     }
@@ -164,6 +168,7 @@ int dw_main(void)
             if (frame_len <= RX_BUF_LEN)
             {
                 dwt_readrxdata(rx_buffer, frame_len, 0);
+                
             }
 
             /* Check that the frame is the expected response from the companion "SS TWR responder" example.
@@ -192,10 +197,17 @@ int dw_main(void)
 
                 tof = ((rtd_init - rtd_resp * (1 - clockOffsetRatio)) / 2.0) * DWT_TIME_UNITS;
                 distance = tof * SPEED_OF_LIGHT;
+                // distance = 0.8*distance+0.2 *temp;
+                // temp=distance;
 
+                temp = (temp*60 + distance*40)/100;
                 /* Display computed distance on LCD. */
-                sprintf(dist_str, "DIST: %3.2f m", distance);
-                lcd_display_str(dist_str);
+                #ifdef DEBUG
+    
+                sprintf(dist_str, "DIST: %d ", (int)round(temp*1000));
+                ILI9341_Draw_String(60, 60, PINK, BLACK, (char *)dist_str, 2);
+
+                #endif
             }
         }
         else
@@ -269,7 +281,7 @@ static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts)
  *    after an exchange of specific messages used to define those short addresses for each device participating to the ranging exchange.
  * 5. This timeout is for complete reception of a frame, i.e. timeout duration must take into account the length of the expected frame. Here the value
  *    is arbitrary but chosen large enough to make sure that there is enough time to receive the complete response frame sent by the responder at the
- *    6.8M data rate used (around 200 µs).
+ *    6.8M data rate used (around 200 ï¿½s).
  * 6. In a real application, for optimum performance within regulatory limits, it may be necessary to set TX pulse bandwidth and TX power, (using
  *    the dwt_configuretxrf API call) to per device calibrated values saved in the target system or the DW1000 OTP memory.
  * 7. dwt_writetxdata() takes the full size of the message as a parameter but only copies (size - 2) bytes as the check-sum at the end of the frame is

@@ -35,10 +35,15 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DEBUG
 //  #define EX_01A_DEF
 //  #include <./ex_01a_simple_tx/ex_01a_main.c>
 #define EX_02A_DEF
 #include <./ex_02a_simple_rx/ex_02a_main.c>
+// #define EX_06A_DEF
+// #include <./ex_06a_ss_twr_init/ex_06a_main.c>
+// #define EX_06B_DEF
+// #include <./ex_06b_ss_twr_resp/ex_06b_main.c>
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -105,6 +110,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   /* =============Initialization=============== */
   setup_DW1000RSTnIRQ(1);
+  #ifdef DEBUG
   ILI9341_Init();
   ILI9341_Set_Rotation(3);
   HAL_Delay(500);
@@ -118,6 +124,7 @@ int main(void)
   ILI9341_Draw_String(20, 20, RED, BLACK, "****** Racoon Lab Tech. ******", 2);
   ILI9341_Draw_String(20, 40, GREENYELLOW, BLACK, (char *)T, 2);
   ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "RX>>$", 2);
+  #endif
   dw_main();
   HAL_Delay(500);
   /* USER CODE END 2 */

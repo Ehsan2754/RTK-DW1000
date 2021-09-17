@@ -36,9 +36,9 @@ static dwt_config_t config = {
 
 /* SNIFF mode on/off times.
  * ON time is expressed in multiples of PAC size (with the IC adding 1 PAC automatically). So the ON time of 1 here gives 2 PAC times and, since the
- * configuration (above) specifies DWT_PAC8, we get an ON time of 2x8 symbols, or around 16 µs.
- * OFF time is expressed in multiples of 128/125 µs (~1 µs).
- * These values will lead to a roughly 50% duty-cycle, each ON and OFF phase lasting for about 16 µs. */
+ * configuration (above) specifies DWT_PAC8, we get an ON time of 2x8 symbols, or around 16 ï¿½s.
+ * OFF time is expressed in multiples of 128/125 ï¿½s (~1 ï¿½s).
+ * These values will lead to a roughly 50% duty-cycle, each ON and OFF phase lasting for about 16 ï¿½s. */
 #define SNIFF_ON_TIME 1
 #define SNIFF_OFF_TIME 16
 
