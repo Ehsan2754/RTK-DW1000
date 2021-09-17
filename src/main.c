@@ -22,10 +22,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 #include <ILI9341_Driver.h>
 #include <display.h>
 #include <port.h>
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,19 +35,28 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- #define EX_02A_DEF
- #include <./ex_02a_simple_rx/ex_02a_main.c>
+//  #define EX_01A_DEF
+//  #include <./ex_01a_simple_tx/ex_01a_main.c>
+#define EX_02A_DEF
+#include <./ex_02a_simple_rx/ex_02a_main.c>
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-static uint8 T[FRAME_LEN_MAX]="AHURATUS Tech";
+// static uint8 T[100] = "AHURATUS Tech";
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
+
+int __io_putchar(int ch)
+{
+  //HAL_UART_Transmit(&huart2,(uint8_t *)&ch, 1, 10);
+  ITM_SendChar(ch);
+  return ch;
+}
 
 /* USER CODE END PV */
 
@@ -71,7 +80,7 @@ static void MX_SPI1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -96,8 +105,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   /* =============Initialization=============== */
   setup_DW1000RSTnIRQ(0);
-  ILI9341_Init();
-  ILI9341_Set_Rotation(3);
+  // ILI9341_Init();
+  // ILI9341_Set_Rotation(3);
   //  HAL_Delay(500);
   //  ILI9341_Fill_Screen(RED);
   //  HAL_Delay(500);
@@ -119,6 +128,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }

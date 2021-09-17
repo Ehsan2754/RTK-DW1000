@@ -49,7 +49,7 @@ static uint16 frame_len = 0;
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK,APP_NAME, 2);
+    // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK,APP_NAME, 2);
 
     /* Reset and initialise DW1000. See NOTE 2 below.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
@@ -58,9 +58,12 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADNONE) == DWT_ERROR)
     {
-        ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "INIT FAILED", 2);
+        // ILI9341_Init();
+        // ILI9341_Fill_Screen(BLACK);
+        // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "INIT FAILED", 2);
         while (1)
-        { };
+        {
+        };
     }
     port_set_dw1000_fastrate();
 
@@ -69,8 +72,8 @@ int dw_main(void)
 
     /* Loop forever receiving frames. */
     while (1)
-    {   
-        ILI9341_Draw_String(20, 100, GREENYELLOW, BLACK, rx_buffer, 2);
+    {
+
         int i;
 
         /* TESTING BREAKPOINT LOCATION #1 */
@@ -79,7 +82,7 @@ int dw_main(void)
          * the RX buffer.
          * This is a good place to put a breakpoint. Here (after first time through the loop) the local status register will be set for last event
          * and if a good receive has happened the data buffer will have the data in it, and frame_len will be set to the length of the RX frame. */
-        for (i = 0 ; i < FRAME_LEN_MAX; i++ )
+        for (i = 0; i < FRAME_LEN_MAX; i++)
         {
             rx_buffer[i] = 0;
         }
@@ -91,7 +94,8 @@ int dw_main(void)
          * STATUS register is 5 bytes long but, as the event we are looking at is in the first byte of the register, we can use this simplest API
          * function to access it. */
         while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
-        { };
+        {
+        };
 
         if (status_reg & SYS_STATUS_RXFCG)
         {
@@ -101,6 +105,9 @@ int dw_main(void)
             {
                 dwt_readrxdata(rx_buffer, frame_len, 0);
             }
+            // ILI9341_Init();
+            // ILI9341_Fill_Screen(BLACK);
+            // ILI9341_Draw_String(20, 100, GREENYELLOW, BLACK, rx_buffer, 2);
             /* Clear good RX frame event in the DW1000 status register. */
             dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
         }

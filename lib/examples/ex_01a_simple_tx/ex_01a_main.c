@@ -52,7 +52,7 @@ static uint8 tx_msg[] = {0xC5, 0, 'D', 'E', 'C', 'A', 'W', 'A', 'V', 'E', 0, 0};
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK,APP_NAME, 2);
+    // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK,APP_NAME, 2);
     /* Reset and initialise DW1000. See NOTE 2 below.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
      * performance. */
@@ -60,7 +60,7 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADNONE) == DWT_ERROR)
     {
-        ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "INIT FAILED", 2);
+        // ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, "INIT FAILED", 2);
         while (1)
         { };
     }

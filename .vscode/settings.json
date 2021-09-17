@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "lcd.h": "c"
+        "lcd.h": "c",
+        "ili9341_driver.h": "c"
     }
 }
