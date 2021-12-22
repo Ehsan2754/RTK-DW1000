@@ -1,6 +1,5 @@
 .settings/
-Debug/
-Release/
+build/
 *.launch
 .vscode
 Tests/shell
