@@ -17,9 +17,9 @@
 #include "ILI9341_Driver.h"
 #include "deca_spi.h"
 #include "port.h"
-
 /* Example application name and version to display on LCD screen. */
 #define APP_NAME "SIMPLE TX v1.2"
+
 
 /* Default communication configuration. We use here EVK1000's default mode (mode 3). */
 static dwt_config_t config = {

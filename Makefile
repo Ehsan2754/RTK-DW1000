@@ -9,7 +9,8 @@
 #	2017-02-10 - Several enhancements + project update mode
 #   2015-07-22 - first version
 #   2021-12-22 - Adding Libraries and Depencencies:
-#				 ILI934 api
+#				 * ILI934 api
+#				 * DECAWAVE api
 #			   - Adding flash command 
 # ------------------------------------------------
 
@@ -18,10 +19,39 @@
 ######################################
 
 # ILI9341 Lib
-ILI9341_LIBDIR := Drivers\Middlewares\ILI9341
-ILI9341_INC := $(ILI9341_LIBDIR)
+ILI9341_LIBDIR := Drivers/Middlewares/ILI9341
+ILI9341_INC := -I$(ILI9341_LIBDIR)
 ILI9341_SRC := $(wildcard $(ILI9341_LIBDIR)/*.c)
 
+# DECAWAVE
+
+## COMPILER
+COMPILER_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/compiler
+COMPILER_DECAWAVE_INC := -I$(COMPILER_DECAWAVE_LIBDIR)
+
+## DRIVER
+DRIVER_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/decadriver
+DRIVER_DECAWAVE_INC := -I$(DRIVER_DECAWAVE_LIBDIR)
+DRIVER_DECAWAVE_SRC := $(wildcard $(DRIVER_DECAWAVE_LIBDIR)/*.c)
+
+## PLATFORM
+PLATFORM_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/platform
+PLATFORM_DECAWAVE_INC := -I$(PLATFORM_DECAWAVE_LIBDIR)
+PLATFORM_DECAWAVE_SRC := $(wildcard $(PLATFORM_DECAWAVE_LIBDIR)/*.c)
+
+## EXAMPLES
+EXAMPLES_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/examples
+EXAMPLES_DECAWAVE_INC := -I$(EXAMPLES_DECAWAVE_LIBDIR)
+
+# MIDDLEWARE
+MIDDLEWARE_INC := $(ILI9341_INC)\
+$(PLATFORM_DECAWAVE_INC)\
+$(DRIVER_DECAWAVE_INC)\
+$(COMPILER_DECAWAVE_INC)\
+$(EXAMPLES_DECAWAVE_INC)
+MIDDLEWARE_SRC := $(ILI9341_SRC) \
+$(DRIVER_DECAWAVE_SRC)\
+$(PLATFORM_DECAWAVE_SRC)
 
 ######################################
 # target
@@ -66,8 +96,8 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
-$(ILI9341_SRC) \
-Core/Src/system_stm32f1xx.c  
+Core/Src/system_stm32f1xx.c \
+$(MIDDLEWARE_SRC)
 
 # ASM sources
 ASM_SOURCES =  \
@@ -129,7 +159,7 @@ C_INCLUDES =  \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
--I$(ILI9341_INC)
+$(MIDDLEWARE_INC)
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -155,7 +185,8 @@ LDSCRIPT = STM32F103C8Tx_FLASH.ld
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-
+# ITM flags
+# -specs=rdimon.specs -lrdimon -specs=nosys.specs -u_printf_float
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 

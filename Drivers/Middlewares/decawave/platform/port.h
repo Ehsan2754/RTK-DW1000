@@ -30,7 +30,7 @@ extern "C" {
 typedef void (*port_deca_isr_t)(void);
 
 /* DW1000 IRQ handler declaration. */
-port_deca_isr_t port_deca_isr;
+extern port_deca_isr_t port_deca_isr;
 
 /*! ------------------------------------------------------------------------------------------------------------------
  * @fn port_set_deca_isr()
