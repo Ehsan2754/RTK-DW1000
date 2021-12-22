@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "lcd.h": "c",
-        "ili9341_driver.h": "c",
-        "deca_device_api.h": "c",
-        "stdio.h": "c"
-    }
-}

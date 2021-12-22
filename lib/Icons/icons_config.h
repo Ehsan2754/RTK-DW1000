@@ -1,2 +1,0 @@
-#define W 0xFFFF
-#define B 0x001F
