@@ -8,7 +8,20 @@
 # ChangeLog :
 #	2017-02-10 - Several enhancements + project update mode
 #   2015-07-22 - first version
+#   2021-12-22 - Adding Libraries and Depencencies:
+#				 ILI934 api
+#			   - Adding flash command 
 # ------------------------------------------------
+
+######################################
+# Libraries and Depencencies
+######################################
+
+# ILI9341 Lib
+ILI9341_LIBDIR := Drivers\Middlewares\ILI9341
+ILI9341_INC := $(ILI9341_LIBDIR)
+ILI9341_SRC := $(wildcard $(ILI9341_LIBDIR)/*.c)
+
 
 ######################################
 # target
@@ -53,6 +66,7 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
+$(ILI9341_SRC) \
 Core/Src/system_stm32f1xx.c  
 
 # ASM sources
@@ -114,8 +128,8 @@ C_INCLUDES =  \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
--IDrivers/CMSIS/Include
-
+-IDrivers/CMSIS/Include \
+-I$(ILI9341_INC)
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

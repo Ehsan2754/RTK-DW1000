@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "ILI9341_Driver.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -88,7 +88,11 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-
+  ILI9341_Init();
+  ILI9341_Set_Rotation(3);
+  ILI9341_Fill_Screen(BLACK);
+  ILI9341_Draw_String(20, 20, RED, BLACK, "****** Screen Test ******", 2);
+  ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, ">>$", 2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
