@@ -19,10 +19,8 @@
  */
 #ifdef EX_05A_DEF
 #include <string.h>
-
 #include "deca_device_api.h"
 #include "deca_regs.h"
-#include "lcd.h"
 #include "deca_spi.h"
 #include "port.h"
 
@@ -74,7 +72,7 @@ static uint8 rx_buffer[RX_BUF_LEN];
 static uint32 status_reg = 0;
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
- * 1 uus = 512 / 499.2 µs and 1 µs = 499.2 * 128 dtu. */
+ * 1 uus = 512 / 499.2 ï¿½s and 1 ï¿½s = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
 
 /* Delay between frames, in UWB microseconds. See NOTE 4 below. */
@@ -112,7 +110,7 @@ static void final_msg_set_ts(uint8 *ts_field, uint64 ts);
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    lcd_display_str(APP_NAME);
+    logs(APP_NAME,20,20);
 
     /* Reset and initialise DW1000.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
@@ -121,7 +119,7 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)
     {
-        lcd_display_str("INIT FAILED");
+        logs("INIT FAILED",20,40);
         while (1)
         { };
     }

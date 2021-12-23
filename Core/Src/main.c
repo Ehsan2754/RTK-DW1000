@@ -20,20 +20,7 @@
 #include "main.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include<stdio.h>
-#include <ILI9341_Driver.h>
-#include "port.h"
-
-#define EX_01A_DEF
-// #define EX_02A_DEF
-
-#ifdef EX_01A_DEF
-#include <./ex_01a_simple_tx/ex_01a_main.c>
-#endif
-#ifdef EX_02A_DEF 
-#include "./ex_02a_simple_rx/ex_02a_main.c"
-#endif
-
+#include "target.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,17 +88,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-
-  ILI9341_Init();
-  ILI9341_Set_Rotation(3);
-  ILI9341_Fill_Screen(BLACK);
-  ILI9341_Draw_String(20, 20, RED, BLACK, "****** Debug Logs ******", 2);
-  ILI9341_Draw_String(20, 60, GREENYELLOW, BLACK, ">>$", 2);
-
-  
-  
-  setup_DW1000RSTnIRQ(1);
-  dw_main();
+  target();
   /* USER CODE END 2 */
 
   /* Infinite loop */

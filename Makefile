@@ -6,52 +6,80 @@
 # Generic Makefile (based on gcc)
 #
 # ChangeLog :
-#	2017-02-10 - Several enhancements + project update mode
-#   2015-07-22 - first version
 #   2021-12-22 - Adding Libraries and Depencencies:
 #				 * ILI934 api
 #				 * DECAWAVE api
 #			   - Adding flash command 
+#	2017-02-10 - Several enhancements + project update mode
+#   2015-07-22 - first version
 # ------------------------------------------------
 
 ######################################
 # Libraries and Depencencies
 ######################################
 
-# ILI9341 Lib
+######################################
+## SEGGER RTT Lib
+# SEGGER_RTT_LIBDIR := Drivers/Middlewares/SEGGER_RTT
+# SEGGER_RTT_ASM := $(wildcard $(SEGGER_RTT_LIBDIR)/RTT/*.s)
+# SEGGER_RTT_INC := -I$(SEGGER_RTT_LIBDIR)/Config \
+# -I$(SEGGER_RTT_LIBDIR)/Syscalls \
+# -I$(SEGGER_RTT_LIBDIR)/RTT 
+# SEGGER_RTT_SRC := $(wildcard $(SEGGER_RTT_LIBDIR)/RTT/*.c) \
+# $(wildcard $(SEGGER_RTT_LIBDIR)/Syscalls/*.c) 
+
+######################################
+## Target src
+Target_DIR := Target
+Target_INC := -I$(Target_DIR)
+Target_SRC := $(wildcard $(Target_DIR)/*.c)
+
+######################################
+## ILI9341 Lib
 ILI9341_LIBDIR := Drivers/Middlewares/ILI9341
 ILI9341_INC := -I$(ILI9341_LIBDIR)
 ILI9341_SRC := $(wildcard $(ILI9341_LIBDIR)/*.c)
 
-# DECAWAVE
-
-## COMPILER
+######################################
+## DECAWAVE
+### COMPILER
 COMPILER_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/compiler
 COMPILER_DECAWAVE_INC := -I$(COMPILER_DECAWAVE_LIBDIR)
-
-## DRIVER
+### DRIVER
 DRIVER_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/decadriver
 DRIVER_DECAWAVE_INC := -I$(DRIVER_DECAWAVE_LIBDIR)
 DRIVER_DECAWAVE_SRC := $(wildcard $(DRIVER_DECAWAVE_LIBDIR)/*.c)
-
-## PLATFORM
+### PLATFORM
 PLATFORM_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/platform
 PLATFORM_DECAWAVE_INC := -I$(PLATFORM_DECAWAVE_LIBDIR)
 PLATFORM_DECAWAVE_SRC := $(wildcard $(PLATFORM_DECAWAVE_LIBDIR)/*.c)
-
-## EXAMPLES
+### EXAMPLES
 EXAMPLES_DECAWAVE_LIBDIR := Drivers/Middlewares/decawave/examples
 EXAMPLES_DECAWAVE_INC := -I$(EXAMPLES_DECAWAVE_LIBDIR)
 
-# MIDDLEWARE
-MIDDLEWARE_INC := $(ILI9341_INC)\
+######################################
+# MIDDLEWARE Integration
+## ASM
+MIDDLEWARE_ASM := \
+# $(SEGGER_RTT_ASM)
+
+## INC
+MIDDLEWARE_INC := \
+$(ILI9341_INC)\
 $(PLATFORM_DECAWAVE_INC)\
 $(DRIVER_DECAWAVE_INC)\
 $(COMPILER_DECAWAVE_INC)\
-$(EXAMPLES_DECAWAVE_INC)
-MIDDLEWARE_SRC := $(ILI9341_SRC) \
+$(EXAMPLES_DECAWAVE_INC)\
+$(Target_INC)
+# $(SEGGER_RTT_INC)
+
+## SRC
+MIDDLEWARE_SRC := \
+$(ILI9341_SRC) \
 $(DRIVER_DECAWAVE_SRC)\
-$(PLATFORM_DECAWAVE_SRC)
+$(PLATFORM_DECAWAVE_SRC)\
+$(Target_SRC)
+# $(SEGGER_RTT_SRC) 
 
 ######################################
 # target
@@ -101,7 +129,8 @@ $(MIDDLEWARE_SRC)
 
 # ASM sources
 ASM_SOURCES =  \
-startup_stm32f103xb.s
+startup_stm32f103xb.s\
+$(MIDDLEWARE_ASM)
 
 
 #######################################
@@ -184,7 +213,7 @@ LDSCRIPT = STM32F103C8Tx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs  -u_printf_float -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 # ITM flags
 # -specs=rdimon.specs -lrdimon -specs=nosys.specs -u_printf_float
 # default action: build all

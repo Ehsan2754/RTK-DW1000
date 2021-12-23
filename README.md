@@ -20,7 +20,12 @@ The current repository contains the implemention of an [RTK](https://en.wikipedi
 * [STM32CubeMX](https://www.st.com/en/development-tools/stm32cubemx.html) ```Vesrion 6.4```
 * [Libraries](Drivers/Middlewares) 
     * [ILI9341](Drivers/Middlewares/ILI9341)
-    > Drivers for interfacing to TFT-LCD
+        > Middleware for interfacing to TFT-LCD.
+    * [DECAWAVE](Drivers\Middlewares\decawave)
+        * Compiler
+        * Decadriver
+        * Platform
+        > Middleware for interfacing DW1000 module.(* I need to say this library is modified a little bit from the original implemention of the api, yet interface is the same.)
     
 ## Methodology
 TBA

@@ -17,15 +17,15 @@
  *
  * @author Decawave
  */
+
 #ifdef EX_05B_DEF
 #include <stdio.h>
 #include <string.h>
-
 #include "deca_device_api.h"
 #include "deca_regs.h"
-#include "lcd.h"
 #include "deca_spi.h"
 #include "port.h"
+#include "stdint.h"
 
 /* Example application name and version to display on LCD screen. */
 #define APP_NAME "DS TWR RESP v1.2"
@@ -72,7 +72,7 @@ static uint8 rx_buffer[RX_BUF_LEN];
 static uint32 status_reg = 0;
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
- * 1 uus = 512 / 499.2 µs and 1 µs = 499.2 * 128 dtu. */
+ * 1 uus = 512 / 499.2 ï¿½s and 1 ï¿½s = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
 
 /* Delay between frames, in UWB microseconds. See NOTE 4 below. */
@@ -121,7 +121,7 @@ static void final_msg_get_ts(const uint8 *ts_field, uint32 *ts);
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    lcd_display_str(APP_NAME);
+    logs(APP_NAME,20,20);
 
     /* Reset and initialise DW1000.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
@@ -130,7 +130,7 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)
     {
-        lcd_display_str("INIT FAILED");
+        logs("INIT FAILED",20,40);
         while (1)
         { };
     }
@@ -256,8 +256,8 @@ int dw_main(void)
                         distance = tof * SPEED_OF_LIGHT;
 
                         /* Display computed distance on LCD. */
-                        sprintf(dist_str, "DIST: %3.2f m", distance);
-                        lcd_display_str(dist_str);
+                        sprintf(dist_str, "DIST=%d, tof=%d ", (uint32_t)( distance*1000),(uint32_t)(tof));
+                        logs(dist_str,20,60);
                     }
                 }
                 else

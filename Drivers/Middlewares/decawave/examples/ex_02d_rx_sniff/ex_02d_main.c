@@ -13,7 +13,7 @@
 #ifdef EX_02D_DEF
 #include "deca_device_api.h"
 #include "deca_regs.h"
-#include "lcd.h"
+#include "target.h"
 #include "deca_spi.h"
 #include "port.h"
 
@@ -29,7 +29,7 @@ static dwt_config_t config = {
     9,               /* TX preamble code. Used in TX only. */
     9,               /* RX preamble code. Used in RX only. */
     1,               /* 0 to use standard SFD, 1 to use non-standard SFD. */
-    DWT_BR_110K,     /* Data rate. */
+    DWT_BR_6M8,     /* Data rate. */
     DWT_PHRMODE_STD, /* PHY header mode. */
     (1025 + 64 - 8)  /* SFD timeout (preamble length + 1 + SFD length - PAC size). Used in RX only. */
 };
@@ -58,7 +58,7 @@ static uint16 frame_len = 0;
 int dw_main(void)
 {
     /* Display application name on LCD. */
-    lcd_display_str(APP_NAME);
+    logs(APP_NAME,20,20);
 
     /* Reset and initialise DW1000. See NOTE 2 below.
      * For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
@@ -67,7 +67,7 @@ int dw_main(void)
     port_set_dw1000_slowrate();
     if (dwt_initialise(DWT_LOADNONE) == DWT_ERROR)
     {
-        lcd_display_str("INIT FAILED");
+        logs("INIT FAILED",20,40);
         while (1)
         { };
     }
