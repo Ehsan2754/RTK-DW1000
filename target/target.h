@@ -1,6 +1,13 @@
-// 12-23-2021
-// Ehsan Shaghaei
-
+/*! ----------------------------------------------------------------------------
+ * @file    target.h
+ * @brief   target generator interface for the RTK system
+ *
+ * @attention
+ * All rights reserved.
+ * 
+ * @author Ehsan Shaghaei
+ * 12-23-2021
+ */
 #ifndef __TARGET_H
 #define __TARGET_H
 

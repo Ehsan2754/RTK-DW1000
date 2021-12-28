@@ -1,6 +1,19 @@
-#define DEBUG
-#define EX_05B_DEF
+/*! ----------------------------------------------------------------------------
+ * @file    target.c
+ * @brief   target generator script for the RTK system
+ *
+ * @attention
+ * All rights reserved.
+ * 
+ * @author Ehsan Shaghaei
+ */
 
+// #define ANCHOR
+// #define ANCHOR_ID 0x02
+#define ROVER
+#define ANCHOR1_ID 0x01
+#define ANCHOR2_ID 0x02
+#define DEBUG
 
 #include <target.h>
 #include <stdio.h>
@@ -8,26 +21,15 @@
 #include <ILI9341_Driver.h>
 #include "port.h"
 
-#ifdef EX_01A_DEF
-#include <./ex_01a_simple_tx/ex_01a_main.c>
-#endif //EX_01A_DEF
+#if (defined (ANCHOR) && defined (ANCHOR_ID))  
+#include "./anchor.c"
+#endif //ANCHOR && ANCHOR_ID
 
-#ifdef EX_02A_DEF 
-#include "./ex_02a_simple_rx/ex_02a_main.c"
-#endif //EX_02A_DEF
-
-#ifdef EX_02D_DEF 
-#include "./ex_02d_rx_sniff/ex_02d_main.c"
-#endif //EX_02D_DEF
+#if (defined (ROVER) && defined (ANCHOR1_ID) && defined (ANCHOR2_ID))   
+#include "./rover.c"
+#endif //ROVER
 
 
-#ifdef EX_05A_DEF 
-#include "./ex_05a_ds_twr_init/ex_05a_main.c"
-#endif //EX_05A_DEF
-
-#ifdef EX_05B_DEF 
-#include "./ex_05b_ds_twr_resp/ex_05b_main.c"
-#endif //EX_05B_DEF 
 
 void target()
 {
