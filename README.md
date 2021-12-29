@@ -3,8 +3,9 @@
 ## Description
 The current repository contains the implemention of an [RTK](https://en.wikipedia.org/wiki/Real-time_kinematic_positioning) positioning system, using [DW1000](https://www.decawave.com/product/dw1000-radio-ic/) ultra wide band module from decawave company on STM32 Coretex M-3 microcontrollers.
 ## Platform architecture
-![RTK-DW1000 Platform Architecture Diagram](https://user-images.githubusercontent.com/53513242/147703054-09fcddd4-2871-4817-b732-64cf7bfb7976.png)
-
+<p align="center">
+   <img src="https://user-images.githubusercontent.com/53513242/147703054-09fcddd4-2871-4817-b732-64cf7bfb7976.png" alt="RTK-DW1000 Platform Architecture Diagram"/>
+</p>
 
 ## Hardware
 * Version 1.0
