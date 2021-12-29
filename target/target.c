@@ -18,7 +18,7 @@
 #define DEBUG
 
 #include <target.h>
-#include "port.h"
+#include <port.h>
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -29,7 +29,7 @@
 #include "./anchor.c"
 #endif // ANCHOR && ANCHOR_ID
 
-#if (defined(ROVER) && defined(ANCHOR1_ID) && defined(ANCHOR2_ID))
+#if (defined(ROVER) && defined(ANCHOR_IDS))
 #include "./rover.c"
 #endif // ROVER
 
