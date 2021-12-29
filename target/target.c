@@ -4,47 +4,46 @@
  *
  * @attention
  * All rights reserved.
- * 
+ *
  * @author Ehsan Shaghaei
  */
 
 // #define ANCHOR
-// #define ANCHOR_ID 0x02
+// #define ANCHOR_ID 0x03
 #define ROVER
-#define ANCHOR1_ID 0x01
-#define ANCHOR2_ID 0x02
+#define ANCHOR_IDS         \
+  {                        \
+    0x01, 0x02, 0x03, 0x04 \
+  }
 #define DEBUG
 
 #include <target.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <ILI9341_Driver.h>
 #include "port.h"
 
-#if (defined (ANCHOR) && defined (ANCHOR_ID))  
+#ifdef DEBUG
+#include <stdio.h>
+#include <ILI9341_Driver.h>
+#endif // DEBUG
+
+#if (defined(ANCHOR) && defined(ANCHOR_ID))
 #include "./anchor.c"
-#endif //ANCHOR && ANCHOR_ID
+#endif // ANCHOR && ANCHOR_ID
 
-#if (defined (ROVER) && defined (ANCHOR1_ID) && defined (ANCHOR2_ID))   
+#if (defined(ROVER) && defined(ANCHOR1_ID) && defined(ANCHOR2_ID))
 #include "./rover.c"
-#endif //ROVER
-
-
+#endif // ROVER
 
 void target()
 {
-
-
+#ifdef DEBUG
   init_debug();
   clear();
+#endif // DEBUG
   setup_DW1000RSTnIRQ(1);
   dw_main();
-    
 }
 
 #ifdef DEBUG
-uint16_t debug_x = 20;
-uint16_t debug_y = 20;
 
 void init_debug(void)
 {
@@ -53,14 +52,13 @@ void init_debug(void)
 }
 void clear(void)
 {
-  debug_x=0;
-  debug_y=0;
   ILI9341_Fill_Screen(BLACK);
   ILI9341_Draw_String(20, 0, RED, BLUE, "********** Target Logs **********", 2);
 }
 
-void logs(char* s,uint16_t x, uint16_t y)
+void logs(char *s, uint16_t x, uint16_t y)
 {
-   ILI9341_Draw_String(x, y, GREENYELLOW, BLACK, s, 2);
+
+  ILI9341_Draw_String(x, y, GREENYELLOW, BLACK, s, 2);
 }
-#endif //DEBUG
+#endif // DEBUG
