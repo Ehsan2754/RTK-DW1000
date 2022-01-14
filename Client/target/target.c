@@ -9,7 +9,7 @@
  */
 
 // #define ANCHOR
-// #define ANCHOR_ID 0x03
+// #define ANCHOR_ID 0x04
 #define ROVER
 #define ANCHOR_IDS         \
   {                        \

@@ -25,13 +25,13 @@
 #include "deca_spi.h"
 #include "port.h"
 #include "stdint.h"
-
+#include <Multilateration.h>
 /* Example application name and version to display on LCD screen. */
-#define APP_NAME "Rover V1.0 "
+#define APP_NAME "Rover V2.0 "
 
 /* Initializing the anchorIDS */
 const uint8_t anchor_ids[] = ANCHOR_IDS;
-uint64_t anchor_distances[] = ANCHOR_IDS;
+double anchor_distances[] = ANCHOR_IDS;
 /* Default communication configuration. We use here EVK1000's default mode (mode 3). */
 static dwt_config_t config = {
     2,               /* Channel number. */
@@ -277,12 +277,17 @@ int dw_main(void)
                             Da = (double)(final_tx_ts - resp_rx_ts);
                             Db = (double)(resp_tx_ts_32 - poll_rx_ts_32);
                             tof_dtu = (int64)((Ra * Rb - Da * Db) / (Ra + Rb + Da + Db));
-                            anchor_distances[i] = (uint64_t)(1000*tof_dtu * DWT_TIME_UNITS * SPEED_OF_LIGHT * ((Ra * Rb - Da * Db) / (Ra + Rb + Da + Db)));
                             tof = tof_dtu * DWT_TIME_UNITS;
                             distance = tof * SPEED_OF_LIGHT;
+                            if (distance < 0)
+                            {
+                                distance = anchor_distances[i];
+                            }
+                            // distance = (90 * distance + 10 * anchor_distances[i]) / 100;
 #ifdef DEBUG
                             /* Display computed distance on LCD. */
-                            sprintf(dist_str, "ANCHOR#%d DIST=%ld  ", i, (uint32_t)(distance * 1000));
+                            sprintf(dist_str, "ANCHOR#%d DIST=%f  ", i + 1, distance);
+                            anchor_distances[i] = distance;
                             logs(dist_str, 20, (40) + i * 20);
 #endif // DEBUG
                         }
@@ -310,6 +315,16 @@ int dw_main(void)
                     dwt_rxreset();
                 }
             }
+            multilatteration(
+                1.0,1.0,1.0,      //Anchor #1 cords 
+                0.0,1.0,0.0,      //Anchor #2 cords
+                1.0,0.0,0.0,      //Anchor #3 cords
+                0.5,0.5,0.0,      //Anchor #4 cords
+                anchor_distances[0],       //Distance from Anchor #1
+                anchor_distances[1],       //Distance from Anchor #2
+                anchor_distances[2],       //Distance from Anchor #3
+                anchor_distances[3]        //Distance from Anchor #4
+            );
         }
     }
 }

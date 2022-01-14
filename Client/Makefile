@@ -28,8 +28,15 @@
 # SEGGER_RTT_SRC := $(wildcard $(SEGGER_RTT_LIBDIR)/RTT/*.c) \
 # $(wildcard $(SEGGER_RTT_LIBDIR)/Syscalls/*.c) 
 
+
 ######################################
-## Target src
+## API Path
+API_DIR := Drivers/API
+API_INC := -I$(API_DIR)
+API_SRC := $(wildcard $(API_DIR)/*.c)
+
+######################################
+## Target Path
 Target_DIR := Target
 Target_INC := -I$(Target_DIR)
 Target_SRC := $(wildcard $(Target_DIR)/*.c)
@@ -70,7 +77,8 @@ $(PLATFORM_DECAWAVE_INC)\
 $(DRIVER_DECAWAVE_INC)\
 $(COMPILER_DECAWAVE_INC)\
 $(EXAMPLES_DECAWAVE_INC)\
-$(Target_INC)
+$(Target_INC)\
+$(API_INC)
 # $(SEGGER_RTT_INC)
 
 ## SRC
@@ -78,7 +86,8 @@ MIDDLEWARE_SRC := \
 $(ILI9341_SRC) \
 $(DRIVER_DECAWAVE_SRC)\
 $(PLATFORM_DECAWAVE_SRC)\
-$(Target_SRC)
+$(Target_SRC)\
+$(API_SRC)
 # $(SEGGER_RTT_SRC) 
 
 ######################################
@@ -258,9 +267,9 @@ clean:
 #######################################
 # flash
 #######################################
-flash: all 
+flash: all
 	openocd -f  interface/stlink.cfg -f target/stm32f1x.cfg -c "program ./build/$(TARGET).elf verify reset exit"
-  
+
 #######################################
 # dependencies
 #######################################
